@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <style>
+    </style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js"></script>
+<script>
+
+    var data = {
+        info: [
+            { label: { value: 'First name', className: 'first-name' },
+                placeholder: 'Please enter your first name'},
+            { label: { value: 'Last name', className: 'last-name' },
+                placeholder: 'Last name here'},
+            { label: { value: 'email', className: 'email' },
+                placeholder: 'Your email address' }
+        ]
+    };
+
+    var defaultContext = { label: 'Question?', placeholder: 'Answer' };
+
+    $(function() {
+        var source   = $("#row-template").html();
+        var template = Handlebars.compile(source);
+
+        var refreshTable = function(){
+            var html    = template(data);
+            $("table tbody").html(html);
+        };
+
+        refreshTable();
+
+        $(".add-row").on("click", function() {
+            data.info.push(
+                    { label: { value: 'Question', className: 'question' },
+                        placeholder: 'Answer' }
+            );
+            refreshTable();
+        })
+
+        $('tbody').on('click','.remove-row', function(){
+            var index = $(this).closest("tr").index();
+            data.info.splice(index, 1);
+            refreshTable();
+        });
+    });
+
+</script>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>The Header</th>
+            <th><button type="button" class="btn btn-primary add-row">+ Add Row</button></th>
+        </tr>
+        </thead>
+        <tbody>
+        <script id="row-template" type="text/x-handlebars-template">
+            {{#each info}}
+            <tr class="p1" data-index={{@index}}>
+                <td class="{{label.className}}">{{label.value}}</td>
+                <td><input type="text" class="form-control" placeholder="{{placeholder}}"></td>
+                <td><button class="btn btn-danger remove-row">Remove</button> </td>
+            </tr>
+            {{/each}}
+        </script>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
